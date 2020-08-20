@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchPosts } from '../actions/postActions';
+import { fetchPosts,fetchSubPost } from '../actions/postActions';
  
 class ReduxSelect extends Component {
 
@@ -13,23 +13,20 @@ class ReduxSelect extends Component {
 
   componentDidMount()
  {
-    fetch('https://ngproductsparam.herokuapp.com/api/getProducts')
-    .then(res=> res.json())
-    .then(data => {
-    // console.log(data)
-      this.setState({product:data})
-    })
+     this.props.fetchPosts();
  }
 
-  handleChange =()=>{
-     this.props.fetchPosts();
+  handleChange =(e)=>{
+   this.props.fetchSubPost(e.target.value);
+    
   } 
 
   render() {
-    const { posts } = this.props;
-    const postItems = posts && posts.map(p => (
+console.log(this.props)
+    const { subposts } = this.props;
+    const postItems = subposts && subposts.map(p => (
       
-        <option  value={p._id}>{p.productName}</option>
+        <option  value={p.id}>{p.title}</option>
         
      
     ))
@@ -40,12 +37,12 @@ class ReduxSelect extends Component {
           <div>
               <select onChange={this.handleChange}>
                     <option> -- Please Select --</option>                                    
-                        {this.state.product.map((team) => <option key={team._id} value={team.id}>{team.productName}</option>)}
+                       {this.props.posts.map((emp) => <option key={emp.id} value={emp.id}>{emp.employee_name}</option>)}
               </select>
                
           </div>
           <div>
-              <select onChange={this.handleChange}>
+              <select >
                 <option> -- Please Select --</option>                                    
                       {postItems}
               </select>
@@ -56,9 +53,11 @@ class ReduxSelect extends Component {
 }
 
 const mapStateToProps = state => ({
-  posts: state.posts.items
+  posts: state.posts.items,
+  subposts :state.posts.items2
+
 });
 
-const mapDispatchToProps = { fetchPosts };
+const mapDispatchToProps = { fetchPosts, fetchSubPost};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReduxSelect);

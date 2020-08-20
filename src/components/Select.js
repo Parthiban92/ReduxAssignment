@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { createPost } from '../actions/postActions';
+import { listAction,fetchPosts } from '../actions/postActions';
 
 class Select extends Component {
 
@@ -13,25 +13,24 @@ class Select extends Component {
 
  componentDidMount()
  {
-    fetch('https://ngproductsparam.herokuapp.com/api/getProducts')
+    fetch('http://dummy.restapiexample.com/api/v1/employees')
     .then(res=> res.json())
-    .then(data => {
-    // console.log(data)
-      this.setState({product:data})
+    .then(data_val => {
+      this.setState({product:data_val.data})
     })
  }
 
  handleChange =(e)=>{
-     fetch('https://ngproductsparam.herokuapp.com/api/getProducts')
+    var user_id = e.target.value;
+     fetch('https://jsonplaceholder.typicode.com/posts')
     .then(res=> res.json())
     .then(data => {
-     console.log(data)
-      this.setState({sub_product:data})
-      this.state.sub_product.map((team) =>
-        
-      {
-         console.log(team)
-      })
+    const result = data.filter(user => user.userId==user_id);
+
+
+    
+      this.setState({sub_product:result})
+      
     })
  }
 
@@ -45,15 +44,15 @@ class Select extends Component {
               <div>
                 <select onChange={this.handleChange}>
                     <option> -- Please Select --</option>                                    
-                        {this.state.product.map((team) => <option key={team._id} value={team.id}>{team.productName}</option>)}
+                        {this.state.product.map((emp) => <option key={emp.id} value={emp.id}>{emp.employee_name}</option>)}
               </select>
           </div>
           <div>
          <select onChange={this.handleChange}>
                 <option> -- Please Select --</option>                                                 
                 {
-                     this.state.sub_product.map((team) =>
-                      <option key={team._id} value={team.id}>{team.productName}</option>
+                     this.state.sub_product.map((sub_prod) =>
+                      <option key={sub_prod._id} value={sub_prod.id}>{sub_prod.title}</option>
                 )}
               </select>
        </div>
